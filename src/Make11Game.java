@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.concurrent.LinkedTransferQueue;
+
 
 public class Make11Game {
 
