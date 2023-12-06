@@ -1,17 +1,17 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 public class Score {
-    int value;
+    private int value;
 
-    Score(int value){
+    public Score(int value){
         this.value = value;
     }
 
-    int getValue(){
+    public int getValue(){
         return value;
     }
 
-    void increment(){
+    public void increment(){
         value++;
     }
 
