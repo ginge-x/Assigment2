@@ -65,7 +65,7 @@ public class Make11Game {
         return false;
     }
 
-    private static boolean make11Move(ArrayList<Card> myHand, Card computerCard, Deck deck, Score myScore){
+    public static boolean make11Move(ArrayList<Card> myHand, Card computerCard, Deck deck, Score myScore){
         System.out.println("Select a card from your hand to Make 11 (A-E)");
         char selectedCardLetter = scanner.next().toUpperCase().charAt(0);
 
@@ -93,7 +93,7 @@ public class Make11Game {
                 if (isPictureCard(selectedCard)){
                     myHand.set(selectedCardIndex, deck.deal());
                 }else {
-                    myHand.set(selectedCardIndex, computerCard);
+                    myHand.set(selectedCardIndex, deck.deal());
                 }
                 myScore.increment();
             } else if (selectedCard.getSuit().equals(computerCard.getSuit())) {
