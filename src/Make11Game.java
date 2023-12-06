@@ -5,11 +5,13 @@ import java.util.Scanner;
 public class Make11Game {
 
     private static Scanner scanner = new Scanner(System.in);
+    private static int roundNumber = 1;
 
     public static void main(String[] args){
         while (true){
+            System.out.println("-------Round " + roundNumber + "-------");
             playGame(scanner);
-
+            roundNumber++;
             System.out.print("Do you want to start a new game? (yes/no): ");
             String playAgain = scanner.next().toLowerCase();
             System.out.println();
@@ -38,7 +40,7 @@ public class Make11Game {
 
         while (!myHand.isEmpty() && (deck.cardsRemaining() > 0 || make11Possible(myHand))){
             Card computerCard = deck.deal();
-            System.out.println("Computer's card: " + computerCard);
+            System.out.println("Computer's deals the : " + computerCard);
 
             if (!make11Move(myHand, computerCard, deck, myScore)){
                 break;
