@@ -21,13 +21,6 @@ public class Card {
         return Card.ranks[this.rank];
     }
 
-//    public String getRank(){
-//        if (this.rank < 0 || this.rank >= ranks.length){
-//            System.out.println("Invalid rank value: " + this.rank);
-//            return "Invalid Rank";
-//        }
-//        return Card.ranks[this.rank];
-//    }
     public String getSuit(){
         return Card.suits[this.suit];
     }

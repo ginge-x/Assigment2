@@ -4,14 +4,31 @@ import java.util.Scanner;
 
 public class Make11Game {
 
+    private static Score myScore = new Score(0);
     private static Scanner scanner = new Scanner(System.in);
     private static int roundNumber = 1;
+    private static HighScoreManager highScoreManager = new HighScoreManager();
 
     public static void main(String[] args){
+        highScoreManager.loadHighScoreTable();
+
+
         while (true){
-            System.out.println("-------Round " + roundNumber + "-------");
+            System.out.println("-------------------------");
+            System.out.println("--- WELCOME TO MAKE11 ---");
+            System.out.println("-------------------------");
+
+            System.out.println("HIGH SCORES");
+            System.out.println("-------------------------");
+            displayHighScoreTable();
+
             playGame(scanner);
-            roundNumber++;
+            if (myScore.getValue() > 0){
+                highScoreManager.updateHighScoreTable(myScore.getValue());
+                highScoreManager.saveHighScoreTable();
+                displayHighScoreTable();
+            }
+
             System.out.print("Do you want to start a new game? (yes/no): ");
             String playAgain = scanner.next().toLowerCase();
             System.out.println();
@@ -26,6 +43,7 @@ public class Make11Game {
 
     private static void playGame(Scanner scanner){
         //Initialise the deck and deal a 5 card hand
+        System.out.println("-------Round " + roundNumber + "-------");
         Deck deck = new Deck();
         ArrayList<Card> myHand = deck.dealHand(5);
 
@@ -45,13 +63,16 @@ public class Make11Game {
             if (!make11Move(myHand, computerCard, deck, myScore)){
                 break;
             }
-
+            roundNumber++;
+            System.out.print("\n-------Round " + roundNumber + "-------");
             System.out.println("\nUpdated Hand:");
             for (Card card : myHand){
                 System.out.println(card);
             }
             System.out.println("Total Score: " + myScore.getValue());
         }
+        highScoreManager.updateHighScoreTable(myScore.getValue());
+        highScoreManager.saveHighScoreTable();
         System.out.println("Game over. Final Score: " + myScore.getValue());
     }
     private static boolean make11Possible(ArrayList<Card> hand){
@@ -126,5 +147,9 @@ public class Make11Game {
     private static boolean isPictureCard(Card card){
         String rank = card.getRank();
         return rank.equals("Jack") || rank.equals("Queen") || rank.equals("King");
+    }
+
+    private static void displayHighScoreTable(){
+        highScoreManager.displayHighScoreTable();
     }
 }
