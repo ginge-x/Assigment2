@@ -136,11 +136,21 @@ public class Make11Game {
     }
 
     private static void replacePictureCards(ArrayList<Card> myHand, Deck deck){
-        for (int i = 0; i < myHand.size(); i++){
-            Card currentCard = myHand.get(i);
-            if (isPictureCard(currentCard)){
-                myHand.set(i, deck.deal());
+        System.out.print("Choose a picture card to replace (A-E):");
+        char selectedCardLetter = scanner.next().toUpperCase().charAt(0);
+
+        if (selectedCardLetter >= 'A' && selectedCardLetter <= 'E'){
+            int selectedCardIndex = selectedCardLetter - 'A';
+            Card selectedCard = myHand.get(selectedCardIndex);
+
+            if (isPictureCard(selectedCard)){
+                myHand.set(selectedCardIndex, deck.deal());
+                System.out.println("Picture card has been replaced");
+            }else {
+                System.out.println("Selected card is not a picture card. No replacement");
             }
+        }else {
+            System.out.println("Invalid card selection. Please choose a letter (A-E). No replacement has been made");
         }
     }
 
