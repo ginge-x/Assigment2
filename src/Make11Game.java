@@ -7,7 +7,7 @@ public class Make11Game {
     private static Score myScore = new Score(0);
     private static Scanner scanner = new Scanner(System.in);
     private static int roundNumber = 1;
-    private static HighScoreManager highScoreManager = new HighScoreManager();
+    private static HighScoreManager highScoreManager = new HighScoreManager(scanner);
 
     public static void main(String[] args){
         highScoreManager.loadHighScoreTable();

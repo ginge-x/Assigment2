@@ -6,10 +6,10 @@ import java.util.Scanner;
 
 public class HighScoreManager {
     private static Score myScore = new Score(0);
-    private static final String HIGH_SCORE_FILE = "highscores.txt";
+    public static String HIGH_SCORE_FILE = "highscores.txt";
     private static Scanner scanner = new Scanner(System.in);
     private static final int HIGH_SCORE_TABLE_SIZE = 5;
-    private static ArrayList<HighScoreEntry> highScoreTable = new ArrayList<>();
+    public ArrayList<HighScoreEntry> highScoreTable = new ArrayList<>();
 
     public void loadHighScoreTable(){
         try (BufferedReader reader = new BufferedReader(new FileReader(HIGH_SCORE_FILE))){
@@ -51,7 +51,10 @@ public class HighScoreManager {
 
     }
 
-    private static void addHighScoreEntry(int newScore){
+    public HighScoreManager(Scanner scanner){
+        HighScoreManager.scanner = scanner;
+    }
+    void addHighScoreEntry(int newScore){
         System.out.println("Congratulations! You have made it to the highscore table!");
         System.out.print("Enter your name: ");
         String playerName = scanner.next();
@@ -72,7 +75,7 @@ public class HighScoreManager {
         System.out.println();
     }
 
-    private static class HighScoreEntry implements Comparable<HighScoreEntry>{
+    static class HighScoreEntry implements Comparable<HighScoreEntry>{
 
         private String name;
         private int score;

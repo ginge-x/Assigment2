@@ -1,5 +1,0 @@
-Roman,9
-Steve,6
-John,5
-Kurt,4
-Irwin,3
