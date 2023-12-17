@@ -24,8 +24,9 @@ public class HighScoreManagerTest extends HighScoreManager {
     }
 
     @Test
-    public void testUpdatedHighScoreTable(){
+    public void testUpdatedHighScoreTable() {
         int existingScore = 90;
+        String playerName = "Test";
         highScoreManager.updateHighScoreTable(existingScore);
         highScoreManager.saveHighScoreTable();
 

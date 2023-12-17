@@ -38,15 +38,19 @@ public class HighScoreManager {
         }
     }
 
-    public void updateHighScoreTable(int newScore){
-        if (highScoreTable.size() > HIGH_SCORE_TABLE_SIZE){
-            if (newScore > highScoreTable.get(HIGH_SCORE_TABLE_SIZE - 1).getScore()){
-                addHighScoreEntry(newScore);
-            }
-            Collections.sort(highScoreTable, Comparator.reverseOrder());
+    public void updateHighScoreTable(int newScore) {
+        String playerName = null;
+        if (newScore >= highScoreTable.get(HIGH_SCORE_TABLE_SIZE -1).getScore()) {
+            System.out.print("Enter your name: ");
+            playerName = scanner.next();
+            System.out.println("Congratulations!, " + playerName + "! You have made it to the high score table");
+        }
+        HighScoreEntry newEntry = new HighScoreEntry(playerName, newScore);
+        highScoreTable.add(newEntry);
+        Collections.sort(highScoreTable, Comparator.reverseOrder());
+
+        if (highScoreTable.size() > HIGH_SCORE_TABLE_SIZE) {
             highScoreTable.subList(HIGH_SCORE_TABLE_SIZE, highScoreTable.size()).clear();
-        }else {
-            addHighScoreEntry(newScore);
         }
 
     }

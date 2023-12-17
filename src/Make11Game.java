@@ -1,9 +1,11 @@
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 
 public class Make11Game {
 
+    private static ArrayList<Round> roundsHistory = new ArrayList<>();
     private static Score myScore = new Score(0);
     private static Scanner scanner = new Scanner(System.in);
     private static int roundNumber = 1;
@@ -23,11 +25,13 @@ public class Make11Game {
             displayHighScoreTable();
 
             playGame(scanner);
+            roundNumber = 1;
             if (myScore.getValue() > 0){
                 highScoreManager.updateHighScoreTable(myScore.getValue());
                 highScoreManager.saveHighScoreTable();
                 displayHighScoreTable();
             }
+            displayReplay();
 
             System.out.print("Do you want to start a new game? (yes/no): ");
             String playAgain = scanner.next().toLowerCase();
@@ -38,10 +42,11 @@ public class Make11Game {
                 break;
             }
         }
+
         scanner.close();
     }
 
-    private static void playGame(Scanner scanner){
+    private static void playGame(Scanner scanner) {
         //Initialise the deck and deal a 5 card hand
         System.out.println("-------Round " + roundNumber + "-------");
         Deck deck = new Deck();
@@ -49,28 +54,36 @@ public class Make11Game {
 
         //display my hand
         System.out.println("My Hand:");
-        for (int i = 0; i < myHand.size(); i++){
-            System.out.println((char)('A' + i) + ". " + myHand.get(i));
+        for (int i = 0; i < myHand.size(); i++) {
+            System.out.println((char) ('A' + i) + ". " + myHand.get(i));
         }
 
         //Game Loop
         Score myScore = new Score(0);
 
-        while (!myHand.isEmpty() && (deck.cardsRemaining() > 0 || make11Possible(myHand))){
-            Card computerCard = deck.deal();
-            System.out.println("Computer's deals the : " + computerCard);
+        Card computerCard = new Card();
+        while (!myHand.isEmpty() && (deck.cardsRemaining() > 0 || make11Possible(myHand))) {
+            computerCard = deck.deal();
+            System.out.println("\nComputer's deals the : " + computerCard);
 
-            if (!make11Move(myHand, computerCard, deck, myScore)){
+            Round round = new Round(roundNumber, new ArrayList<>(myHand), computerCard);
+            displayRoundInfo(round);
+
+            if (!make11Move(myHand, computerCard, deck, myScore, round)) {
                 break;
             }
             roundNumber++;
             System.out.print("\n-------Round " + roundNumber + "-------");
             System.out.println("\nUpdated Hand:");
-            for (Card card : myHand){
-                System.out.println(card);
+            for (int i = 0; i < myHand.size(); i++) {
+                System.out.println((char) ('A' + i) + ". " + myHand.get(i));
             }
-            System.out.println("Total Score: " + myScore.getValue());
+            roundsHistory.add(round);
+            System.out.println("\nTotal Score: " + myScore.getValue());
         }
+        Round finalRound = new Round(roundNumber, new ArrayList<>(myHand), computerCard);
+        roundsHistory.add(finalRound);
+
         highScoreManager.updateHighScoreTable(myScore.getValue());
         highScoreManager.saveHighScoreTable();
         System.out.println("Game over. Final Score: " + myScore.getValue());
@@ -86,7 +99,13 @@ public class Make11Game {
         return false;
     }
 
-    public static boolean make11Move(ArrayList<Card> myHand, Card computerCard, Deck deck, Score myScore){
+    private static void displayRoundInfo(Round round){
+        round.getRoundNumber();
+        round.getPlayerHand();
+        round.getComputerCard();
+    }
+
+    public static boolean make11Move(ArrayList<Card> myHand, Card computerCard, Deck deck, Score myScore, Round round){
         System.out.println("Select a card from your hand to Make 11 (A-E)");
         char selectedCardLetter = scanner.next().toUpperCase().charAt(0);
 
@@ -96,6 +115,8 @@ public class Make11Game {
 
             if (selectedCard.getRankValue() + computerCard.getRankValue() == 11){
                 System.out.println("Made 11! +1 point.");
+                round.setMake11Successful(true);
+                round.setCardPlayedByPlayer(selectedCard);
 
                 boolean containsPictureCard = myHand.stream().anyMatch(card ->
                         card.getRank().equals("Jack") ||
@@ -119,6 +140,7 @@ public class Make11Game {
                 myScore.increment();
             } else if (selectedCard.getSuit().equals(computerCard.getSuit())) {
                 System.out.println("Same suit played. No point scored.");
+                round.setCardPlayedByPlayer(selectedCard);
                 myHand.set(selectedCardIndex, deck.deal());
 
                 if (isPictureCard(selectedCard)) {
@@ -126,6 +148,7 @@ public class Make11Game {
                 }
             }else {
                 System.out.println("Make 11 not achieved. No points scored");
+                round.setMake11Successful(false);
                 return false;
             }
             return true;
@@ -161,5 +184,17 @@ public class Make11Game {
 
     private static void displayHighScoreTable(){
         highScoreManager.displayHighScoreTable();
+    }
+
+    private static void displayReplay(){
+        for (Round round : roundsHistory){
+            System.out.println("\n--------------------------");
+            System.out.println("Replay for Round " + round.getRoundNumber());
+            System.out.println("Player's Hand: " + round.getPlayerHand());
+            System.out.println("Computer's Card: " + round.getComputerCard());
+            System.out.println("Card Played by Player: " + round.getCardPlayedByPlayer());
+            System.out.println("Make 11 Successful: " + round.isMake11Successful());
+            System.out.println("--------------------------");
+        }
     }
 }
